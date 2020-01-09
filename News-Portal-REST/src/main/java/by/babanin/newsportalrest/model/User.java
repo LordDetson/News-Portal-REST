@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Set;
+import java.util.StringJoiner;
 
 @Entity
 public class User implements UserDetails {
@@ -123,8 +124,24 @@ public class User implements UserDetails {
             return this;
         }
 
+        public UserBuilder setRoles(Set<Role> roles) {
+            User.this.roles = roles;
+            return this;
+        }
+
         public User build() {
             return User.this;
         }
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", User.class.getSimpleName() + "[", "]")
+                .add("id=" + id)
+                .add("username='" + username + "'")
+                .add("password='" + password + "'")
+                .add("active=" + active)
+                .add("roles=" + roles)
+                .toString();
     }
 }

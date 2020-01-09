@@ -1,6 +1,7 @@
 package by.babanin.newsportalrest.config;
 
 import by.babanin.newsportalrest.dao.UserRepository;
+import by.babanin.newsportalrest.model.Role;
 import by.babanin.newsportalrest.model.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -8,6 +9,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 @Configuration
@@ -37,11 +41,13 @@ public class InitDatabaseConfig {
             User user = User.builder(passwordEncoder)
                     .setUsername(userUsername)
                     .setPassword(userPassword)
+                    .setRoles(Collections.singleton(Role.USER))
                     .build();
 
             User admin = User.builder(passwordEncoder)
                     .setUsername(adminUsername)
                     .setPassword(adminPassword)
+                    .setRoles(new HashSet<>(Arrays.asList(Role.USER, Role.ADMINISTRATOR)))
                     .build();
 
             userRepository.save(user);
