@@ -1,4 +1,4 @@
-package by.babanin.newsportalrest.config;
+package by.babanin.newsportalrest.config.restComponent;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;

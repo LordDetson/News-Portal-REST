@@ -1,4 +1,4 @@
-package by.babanin.newsportalrest.config;
+package by.babanin.newsportalrest.config.restComponent;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;

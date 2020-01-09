@@ -1,13 +1,11 @@
 package by.babanin.newsportalrest.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -16,31 +14,28 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationFa
 
 @Configuration
 @EnableWebSecurity
-public class SecurityJavaConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final AuthenticationEntryPoint restAuthenticationEntryPoint;
-    private final AuthenticationSuccessHandler RestAuthenticationSuccessHandler;
+    private final AuthenticationSuccessHandler restAuthenticationSuccessHandler;
     private final AuthenticationFailureHandler simpleUrlAuthenticationFailureHandler;
+    private final UserDetailsService userService;
+    private final PasswordEncoder passwordEncoder;
 
-    public SecurityJavaConfig(
+    public WebSecurityConfig(
             AuthenticationEntryPoint restAuthenticationEntryPoint,
-            AuthenticationSuccessHandler RestAuthenticationSuccessHandler
-    ) {
+            AuthenticationSuccessHandler restAuthenticationSuccessHandler,
+            UserDetailsService userService, PasswordEncoder passwordEncoder) {
         this.restAuthenticationEntryPoint = restAuthenticationEntryPoint;
-        this.RestAuthenticationSuccessHandler = RestAuthenticationSuccessHandler;
+        this.restAuthenticationSuccessHandler = restAuthenticationSuccessHandler;
+        this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
         this.simpleUrlAuthenticationFailureHandler = new SimpleUrlAuthenticationFailureHandler();
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-                .withUser("admin").password(passwordEncoder().encode("admin")).roles("ADMIN")
-                .and()
-                .withUser("user").password(passwordEncoder().encode("user")).roles("USER");
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(11);
+        auth.userDetailsService(userService)
+                .passwordEncoder(passwordEncoder);
     }
 
     @Override
@@ -55,9 +50,12 @@ public class SecurityJavaConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/admin/**").hasRole("ADMIN")
                 .and()
                 .formLogin()
-                .successHandler(RestAuthenticationSuccessHandler)
+                .successHandler(restAuthenticationSuccessHandler)
                 .failureHandler(simpleUrlAuthenticationFailureHandler)
                 .and()
-                .logout();
+                .rememberMe()
+                .and()
+                .logout()
+                .permitAll();
     }
 }
