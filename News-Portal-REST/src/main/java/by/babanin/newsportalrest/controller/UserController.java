@@ -5,7 +5,7 @@ import by.babanin.newsportalrest.model.view.ViewUser;
 import by.babanin.newsportalrest.service.UserService;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -18,7 +18,13 @@ public class UserController {
 
     @PostMapping("/registration")
     @JsonView(ViewUser.NoPassword.class)
-    public User registration(@RequestBody User user) {
+    public User registration(
+            @RequestParam("username") String username,
+            @RequestParam("password") String password
+    ) {
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(password);
         return userService.addUser(user);
     }
 }
