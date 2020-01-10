@@ -17,6 +17,7 @@
 	<properties>
 		<java.version>1.8</java.version>
 		<maven.deploy.skip>true</maven.deploy.skip>
+		<docker.repository>lorddetson</docker.repository>
 	</properties>
 
 	<dependencies>
@@ -92,7 +93,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<repository>registry.heroku.com/${project.artifactId}/web</repository>
+					<repository>${docker.repository}/${project.artifactId}</repository>
 					<tag>latest</tag>
 					<buildArgs>
 						<JAR_FILE>${project.build.finalName}.jar</JAR_FILE>

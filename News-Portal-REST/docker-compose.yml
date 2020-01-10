@@ -1,0 +1,21 @@
+version: "3"
+services:
+  news-portal-rest:
+    image: lorddetson/news-portal-rest:latest
+    ports:
+      - "8080:8080"
+    networks:
+      - news-portal-mysql
+    depends_on:
+      - mysqlserver
+
+  mysqlserver:
+    image: mysql
+    networks:
+      - news-portal-mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=news_portal
+
+networks:
+  news-portal-mysql:
