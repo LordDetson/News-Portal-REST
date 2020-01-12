@@ -62,11 +62,12 @@ public class InitDatabaseConfig {
 
             User adminFromDB = userRepository.findByUsername("admin");
 
-            NewsItem newsItem = new NewsItem();
-            newsItem.setTitle("Test news");
-            newsItem.setContent("New news");
-            newsItem.setPublicationData(LocalDateTime.of(2020, Month.APRIL, 1, 1, 0));
-            newsItem.setAuthor(adminFromDB);
+            NewsItem newsItem = NewsItem.builder()
+                    .title("Test news")
+                    .content("New news")
+                    .publicationData(LocalDateTime.of(2020, Month.APRIL, 1, 1, 0))
+                    .author(adminFromDB)
+                    .build();
             newsItemRepository.save(newsItem);
 
             System.out.println("----- Profiles ------");
