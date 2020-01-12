@@ -2,10 +2,7 @@ package by.babanin.newsportalrest.model;
 
 import by.babanin.newsportalrest.model.view.ViewUser;
 import com.fasterxml.jackson.annotation.JsonView;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,6 +18,8 @@ import java.util.Set;
 @Data
 @EqualsAndHashCode(of = "id")
 @ToString
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 public class User implements UserDetails {
     @Id
@@ -74,45 +73,5 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return getActive();
-    }
-
-    public static UserBuilder builder() {
-        return new User().new UserBuilder();
-    }
-
-    public class UserBuilder {
-
-        private UserBuilder() {
-            User.this.active = Boolean.TRUE;
-        }
-
-        public UserBuilder id(Integer id) {
-            User.this.id = id;
-            return this;
-        }
-
-        public UserBuilder username(String username) {
-            User.this.username = username;
-            return this;
-        }
-
-        public UserBuilder password(String password) {
-            User.this.password = password;
-            return this;
-        }
-
-        public UserBuilder active(Boolean active) {
-            User.this.active = active;
-            return this;
-        }
-
-        public UserBuilder roles(Set<Role> roles) {
-            User.this.roles = roles;
-            return this;
-        }
-
-        public User build() {
-            return User.this;
-        }
     }
 }

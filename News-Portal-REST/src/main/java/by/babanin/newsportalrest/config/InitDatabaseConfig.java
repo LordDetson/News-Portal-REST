@@ -49,12 +49,14 @@ public class InitDatabaseConfig {
                     .username(userUsername)
                     .password(passwordEncoder.encode(userPassword))
                     .roles(Collections.singleton(Role.USER))
+                    .active(true)
                     .build();
 
             User admin = User.builder()
                     .username(adminUsername)
                     .password(passwordEncoder.encode(adminPassword))
                     .roles(new HashSet<>(Arrays.asList(Role.USER, Role.ADMINISTRATOR)))
+                    .active(true)
                     .build();
 
             userRepository.save(user);

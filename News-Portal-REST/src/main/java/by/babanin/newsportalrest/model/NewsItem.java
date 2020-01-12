@@ -1,9 +1,6 @@
 package by.babanin.newsportalrest.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -15,6 +12,8 @@ import java.time.LocalDateTime;
 @Data
 @EqualsAndHashCode(of = "id")
 @ToString(exclude = {"author"})
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 public class NewsItem{
     @Id
@@ -35,40 +34,4 @@ public class NewsItem{
     @ManyToOne
     @JoinColumn(name = "author_id", referencedColumnName = "id")
     private User author;
-
-    public static NewsItemBuilder builder() {
-        return new NewsItem().new NewsItemBuilder();
-    }
-
-    public class NewsItemBuilder {
-        public NewsItemBuilder id(Integer id) {
-            NewsItem.this.id = id;
-            return this;
-        }
-
-        public NewsItemBuilder title(String title) {
-            NewsItem.this.title = title;
-            return this;
-        }
-
-        public NewsItemBuilder content(String content) {
-            NewsItem.this.content = content;
-            return this;
-        }
-
-        public NewsItemBuilder publicationData(LocalDateTime publicationData) {
-            NewsItem.this.publicationData = publicationData;
-            return this;
-        }
-
-        public NewsItemBuilder author(User author) {
-            NewsItem.this.author = author;
-            return this;
-        }
-
-        public NewsItem build() {
-            return NewsItem.this;
-        }
-    }
-
 }
