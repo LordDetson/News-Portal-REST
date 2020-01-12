@@ -76,34 +76,37 @@ public class User implements UserDetails {
         return getActive();
     }
 
-    public static UserBuilder builder(PasswordEncoder passwordEncoder) {
-        return new User().new UserBuilder(passwordEncoder);
+    public static UserBuilder builder() {
+        return new User().new UserBuilder();
     }
 
     public class UserBuilder {
-        private final PasswordEncoder passwordEncoder;
 
-        private UserBuilder(PasswordEncoder passwordEncoder) {
-            this.passwordEncoder = passwordEncoder;
+        private UserBuilder() {
             User.this.active = Boolean.TRUE;
         }
 
-        public UserBuilder setUsername(String username) {
+        public UserBuilder id(Integer id) {
+            User.this.id = id;
+            return this;
+        }
+
+        public UserBuilder username(String username) {
             User.this.username = username;
             return this;
         }
 
-        public UserBuilder setPassword(String password) {
-            User.this.password = passwordEncoder.encode(password);
+        public UserBuilder password(String password) {
+            User.this.password = password;
             return this;
         }
 
-        public UserBuilder setActive(Boolean active) {
+        public UserBuilder active(Boolean active) {
             User.this.active = active;
             return this;
         }
 
-        public UserBuilder setRoles(Set<Role> roles) {
+        public UserBuilder roles(Set<Role> roles) {
             User.this.roles = roles;
             return this;
         }

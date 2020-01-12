@@ -45,16 +45,16 @@ public class InitDatabaseConfig {
             userRepository.deleteAll();
             newsItemRepository.deleteAll();
 
-            User user = User.builder(passwordEncoder)
-                    .setUsername(userUsername)
-                    .setPassword(userPassword)
-                    .setRoles(Collections.singleton(Role.USER))
+            User user = User.builder()
+                    .username(userUsername)
+                    .password(passwordEncoder.encode(userPassword))
+                    .roles(Collections.singleton(Role.USER))
                     .build();
 
-            User admin = User.builder(passwordEncoder)
-                    .setUsername(adminUsername)
-                    .setPassword(adminPassword)
-                    .setRoles(new HashSet<>(Arrays.asList(Role.USER, Role.ADMINISTRATOR)))
+            User admin = User.builder()
+                    .username(adminUsername)
+                    .password(passwordEncoder.encode(adminPassword))
+                    .roles(new HashSet<>(Arrays.asList(Role.USER, Role.ADMINISTRATOR)))
                     .build();
 
             userRepository.save(user);
