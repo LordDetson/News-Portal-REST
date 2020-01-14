@@ -22,11 +22,11 @@ public class NewsItem{
     private Integer id;
 
     @Column(nullable = false)
-    @Size(min = 1, max = 50)
+    @Size(min = 10, max = 50)
     private @NotEmpty String title;
 
     @Column(length = 5000, nullable = false)
-    @Size(min = 1, max = 5000)
+    @Size(min = 255, max = 5000)
     private @NotEmpty String content;
 
     @Column(nullable = false)

@@ -33,6 +33,6 @@ public class CommentItem {
     private @NotNull LocalDateTime commentDate;
 
     @Column(length = 2000, nullable = false)
-    @Size(min = 1, max = 2000)
+    @Size(min = 5, max = 2000)
     private @NotEmpty String message;
 }

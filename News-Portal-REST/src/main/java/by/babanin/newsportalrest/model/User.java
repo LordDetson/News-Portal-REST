@@ -28,12 +28,12 @@ public class User implements UserDetails {
     private Integer id;
 
     @Column(length = 50, nullable = false)
-    @Size(min = 2, max = 50)
+    @Size(min = 5, max = 50)
     @JsonView(ViewUser.NoPassword.class)
     private @NotEmpty String username;
 
     @Column(length = 100, nullable = false)
-    @Size(min = 2, max = 100)
+    @Size(min = 5, max = 100)
     @JsonView(ViewUser.FullUser.class)
     private @NotEmpty String password;
 
