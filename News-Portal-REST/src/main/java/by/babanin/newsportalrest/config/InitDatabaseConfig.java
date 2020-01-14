@@ -1,7 +1,9 @@
 package by.babanin.newsportalrest.config;
 
+import by.babanin.newsportalrest.dao.CommentItemRepository;
 import by.babanin.newsportalrest.dao.NewsItemRepository;
 import by.babanin.newsportalrest.dao.UserRepository;
+import by.babanin.newsportalrest.model.CommentItem;
 import by.babanin.newsportalrest.model.NewsItem;
 import by.babanin.newsportalrest.model.Role;
 import by.babanin.newsportalrest.model.User;
@@ -23,6 +25,7 @@ public class InitDatabaseConfig {
     private final UserRepository userRepository;
     private final NewsItemRepository newsItemRepository;
     private final PasswordEncoder passwordEncoder;
+    private final CommentItemRepository commentItemRepository;
 
     @Value("${initdb.user.username}")
     private String userUsername;
@@ -33,10 +36,11 @@ public class InitDatabaseConfig {
     @Value("${initdb.admin.password}")
     private String adminPassword;
 
-    public InitDatabaseConfig(UserRepository userRepository, NewsItemRepository newsItemRepository, PasswordEncoder passwordEncoder) {
+    public InitDatabaseConfig(UserRepository userRepository, NewsItemRepository newsItemRepository, PasswordEncoder passwordEncoder, CommentItemRepository commentItemRepository) {
         this.userRepository = userRepository;
         this.newsItemRepository = newsItemRepository;
         this.passwordEncoder = passwordEncoder;
+        this.commentItemRepository = commentItemRepository;
     }
 
     @Bean
@@ -62,6 +66,7 @@ public class InitDatabaseConfig {
             userRepository.save(user);
             userRepository.save(admin);
 
+            User userFromDB = userRepository.findByUsername("user");
             User adminFromDB = userRepository.findByUsername("admin");
 
             NewsItem newsItem = NewsItem.builder()
@@ -70,7 +75,17 @@ public class InitDatabaseConfig {
                     .publicationData(LocalDateTime.of(2020, Month.APRIL, 1, 1, 0))
                     .author(adminFromDB)
                     .build();
-            newsItemRepository.save(newsItem);
+
+            NewsItem newsItemFromDB = newsItemRepository.save(newsItem);
+
+            CommentItem commentItem = CommentItem.builder()
+                    .author(userFromDB)
+                    .publication(newsItemFromDB)
+                    .commentDate(LocalDateTime.of(2020, Month.APRIL, 1, 2, 0))
+                    .message("It's cool!")
+                    .build();
+
+            commentItemRepository.save(commentItem);
 
             System.out.println("----- Profiles ------");
             List<User> users = userRepository.findAll();
@@ -78,6 +93,9 @@ public class InitDatabaseConfig {
             System.out.println("----- News ------");
             List<NewsItem> news = newsItemRepository.findAll();
             news.forEach(System.out::println);
+            System.out.println("----- Comments ------");
+            List<CommentItem> comments = commentItemRepository.findAll();
+            comments.forEach(System.out::println);
         };
     }
 }

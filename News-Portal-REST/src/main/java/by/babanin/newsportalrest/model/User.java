@@ -17,7 +17,7 @@ import java.util.Set;
 @Entity
 @Data
 @EqualsAndHashCode(of = "id")
-@ToString
+@ToString(exclude = {"publications", "comments"})
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -49,6 +49,9 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<NewsItem> publications;
+
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<CommentItem> comments;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
