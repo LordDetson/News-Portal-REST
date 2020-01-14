@@ -1,61 +1,46 @@
 package by.babanin.newsportalrest.config;
 
+import by.babanin.newsportalrest.config.jwt.JwtSecurityConfigurer;
+import by.babanin.newsportalrest.model.Role;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
+import org.springframework.security.config.http.SessionCreationPolicy;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    private final AuthenticationEntryPoint restAuthenticationEntryPoint;
-    private final AuthenticationSuccessHandler restAuthenticationSuccessHandler;
-    private final AuthenticationFailureHandler simpleUrlAuthenticationFailureHandler;
-    private final UserDetailsService userService;
-    private final PasswordEncoder passwordEncoder;
+    private final JwtSecurityConfigurer jwtSecurityConfigurer;
 
-    public WebSecurityConfig(
-            AuthenticationEntryPoint restAuthenticationEntryPoint,
-            AuthenticationSuccessHandler restAuthenticationSuccessHandler,
-            UserDetailsService userService, PasswordEncoder passwordEncoder) {
-        this.restAuthenticationEntryPoint = restAuthenticationEntryPoint;
-        this.restAuthenticationSuccessHandler = restAuthenticationSuccessHandler;
-        this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
-        this.simpleUrlAuthenticationFailureHandler = new SimpleUrlAuthenticationFailureHandler();
+    public WebSecurityConfig(JwtSecurityConfigurer jwtSecurityConfigurer) {
+        this.jwtSecurityConfigurer = jwtSecurityConfigurer;
     }
 
+    @Bean
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userService)
-                .passwordEncoder(passwordEncoder);
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .httpBasic().disable()
                 .csrf().disable()
-                .exceptionHandling()
-                .authenticationEntryPoint(restAuthenticationEntryPoint)
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/*").authenticated()
-                .antMatchers("/api/admin/**").hasRole("ADMIN")
+                .antMatchers("/auth/signin").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/**").authenticated()
+                .antMatchers(HttpMethod.POST, "/api/**").hasRole(Role.ADMINISTRATOR.name())
+                .antMatchers(HttpMethod.PUT, "/api/**").hasRole(Role.ADMINISTRATOR.name())
+                .antMatchers(HttpMethod.DELETE, "/api/**").hasRole(Role.ADMINISTRATOR.name())
+                .anyRequest().authenticated()
                 .and()
-                .formLogin()
-                .successHandler(restAuthenticationSuccessHandler)
-                .failureHandler(simpleUrlAuthenticationFailureHandler)
-                .and()
-                .rememberMe()
-                .and()
-                .logout()
-                .permitAll();
+                .apply(jwtSecurityConfigurer);
     }
 }

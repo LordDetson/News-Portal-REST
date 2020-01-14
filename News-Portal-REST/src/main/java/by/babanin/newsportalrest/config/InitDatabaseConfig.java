@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
@@ -68,8 +69,10 @@ public class InitDatabaseConfig {
             userRepository.save(user);
             userRepository.save(admin);
 
-            User userFromDB = userRepository.findByUsername("user");
-            User adminFromDB = userRepository.findByUsername("admin");
+            User userFromDB = userRepository.findByUsername("user")
+                    .orElseThrow(() -> new UsernameNotFoundException("Username: user not found"));
+            User adminFromDB = userRepository.findByUsername("admin")
+                    .orElseThrow(() -> new UsernameNotFoundException("Username: admin not found"));
 
             NewsItem newsItem = NewsItem.builder()
                     .title("Test news")
