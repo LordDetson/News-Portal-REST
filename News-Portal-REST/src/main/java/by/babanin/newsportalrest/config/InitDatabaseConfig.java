@@ -54,6 +54,7 @@ public class InitDatabaseConfig {
                     .password(passwordEncoder.encode(userPassword))
                     .roles(Collections.singleton(Role.USER))
                     .active(true)
+                    .accountNonLocked(false)
                     .build();
 
             User admin = User.builder()
@@ -61,6 +62,7 @@ public class InitDatabaseConfig {
                     .password(passwordEncoder.encode(adminPassword))
                     .roles(new HashSet<>(Arrays.asList(Role.USER, Role.ADMINISTRATOR)))
                     .active(true)
+                    .accountNonLocked(true)
                     .build();
 
             userRepository.save(user);

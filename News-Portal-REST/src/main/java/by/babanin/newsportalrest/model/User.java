@@ -41,6 +41,10 @@ public class User implements UserDetails {
     @JsonView(ViewUser.NoPassword.class)
     private @NotNull Boolean active;
 
+    @Column(nullable = false)
+    @JsonView(ViewUser.NoPassword.class)
+    private @NotNull Boolean accountNonLocked;
+
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
@@ -65,7 +69,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return getAccountNonLocked();
     }
 
     @Override
