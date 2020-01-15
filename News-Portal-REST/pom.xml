@@ -14,10 +14,19 @@
 	<name>News-Portal-REST</name>
 	<description>Test task from Smartym</description>
 
+	<repositories>
+		<repository>
+			<id>jcenter-snapshots</id>
+			<name>jcenter</name>
+			<url>http://oss.jfrog.org/artifactory/oss-snapshot-local/</url>
+		</repository>
+	</repositories>
+
 	<properties>
 		<java.version>1.8</java.version>
 		<maven.deploy.skip>true</maven.deploy.skip>
 		<docker.repository>lorddetson</docker.repository>
+		<spring.fox.version>3.0.0-SNAPSHOT</spring.fox.version>
 	</properties>
 
 	<dependencies>
@@ -84,6 +93,22 @@
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>${spring.fox.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-bean-validators</artifactId>
+			<version>${spring.fox.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>${spring.fox.version}</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
