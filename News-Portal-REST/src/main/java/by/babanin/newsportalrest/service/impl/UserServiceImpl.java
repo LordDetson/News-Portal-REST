@@ -26,16 +26,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public User getUser(String username) {
-        return (User) loadUserByUsername(username);
+        return userRepository.findByUsername(username).orElse(null);
     }
 
     @Override
     public User addUser(User user) {
         if (!Objects.isNull(getUser(user.getUsername())))
-            throw new UserExistsException("Порльзователь с username " + user.getUsername() + " существует");
-        user.setRoles(Collections.singleton(Role.USER));
+            throw new UserExistsException("Пользователь с username " + user.getUsername() + " существует");
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setActive(Boolean.TRUE);
         return userRepository.save(user);
     }
 
