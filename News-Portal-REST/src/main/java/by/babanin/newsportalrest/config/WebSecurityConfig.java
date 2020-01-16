@@ -45,6 +45,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(antPatternsPermitAll).permitAll()
                 .antMatchers(HttpMethod.GET, "/api/**").authenticated()
+                .antMatchers(HttpMethod.POST, "/api/comments").authenticated()
+                .antMatchers(HttpMethod.PUT, "/api/comments").authenticated()
+                .antMatchers(HttpMethod.DELETE, "/api/comments").authenticated()
                 .anyRequest().hasRole(Role.ADMINISTRATOR.name())
                 .and()
                 .apply(jwtSecurityConfigurer);
