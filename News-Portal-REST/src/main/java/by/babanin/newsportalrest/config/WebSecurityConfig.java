@@ -14,6 +14,15 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    private String[] antPatternsPermitAll = {
+            "/auth/signin",
+            "/registration",
+            "/swagger-resources/**",
+            "/webjars/**",
+            "/swagger-ui.html",
+            "/v2/api-docs"
+    };
+
     private final JwtSecurityConfigurer jwtSecurityConfigurer;
 
     public WebSecurityConfig(JwtSecurityConfigurer jwtSecurityConfigurer) {
@@ -34,7 +43,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/auth/signin", "/registration").permitAll()
+                .antMatchers(antPatternsPermitAll).permitAll()
                 .antMatchers(HttpMethod.GET, "/api/**").authenticated()
                 .anyRequest().hasRole(Role.ADMINISTRATOR.name())
                 .and()
