@@ -26,7 +26,7 @@
 		<java.version>1.8</java.version>
 		<maven.deploy.skip>true</maven.deploy.skip>
 		<docker.repository>lorddetson</docker.repository>
-		<spring.fox.version>2.8.0</spring.fox.version>
+		<spring.fox.version>2.10.0</spring.fox.version>
 	</properties>
 
 	<dependencies>
